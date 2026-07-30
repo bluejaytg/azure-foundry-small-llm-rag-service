@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  python-ai-engine:
+    build:
+      context: ../ai_engine_python
+    ports:
+      - "8000:8000"
+    environment:
+      - AZURE_AI_FOUNDRY_ENDPOINT=${AZURE_AI_FOUNDRY_ENDPOINT}
+      - AZURE_AI_FOUNDRY_KEY=${AZURE_AI_FOUNDRY_KEY}
+
+  nodejs-gateway:
+    build:
+      context: ../backend_nodejs
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - PYTHON_AI_SERVICE_URL=http://python-ai-engine:8000/api/rag
+    depends_on:
+      - python-ai-engine
